@@ -3,6 +3,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, Optional
 from journal_ai.models import JournalEntry
+from journal_ai.utils import generate_title
 
 
 class JsonStorage:
@@ -47,12 +48,13 @@ class JsonStorage:
                 tags=existing_entry.tags
             )
         else:
+            generated_title = title or generate_title(content)
             entry = JournalEntry(
                 content=content,
                 created_at=now,
                 updated_at=now,
                 id=entry_id,
-                title=title
+                title=generated_title
             )
 
         with open(self._get_entry_path(entry_id), 'w') as f:

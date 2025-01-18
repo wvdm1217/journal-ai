@@ -56,6 +56,8 @@ def view():
     entries = journal.view_entries()
     for entry_id, entry in entries.items():
         click.echo(f"\nEntry {entry_id}:")
+        if entry.title:
+            click.echo(f"Title: {entry.title}")
         click.echo(
             f"Created: {entry.created_at.strftime('%Y-%m-%d %H:%M:%S')}")
         click.echo(

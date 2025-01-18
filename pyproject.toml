@@ -5,3 +5,13 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = []
+
+[project.scripts]
+journal-ai = "journal_ai.main:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["journal_ai"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

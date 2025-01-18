@@ -2,9 +2,10 @@ import json
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Optional
+
+from journal_ai.config import Config
 from journal_ai.models import JournalEntry
 from journal_ai.utils import generate_title
-from journal_ai.config import Config
 
 
 class JsonStorage:

@@ -1,7 +1,9 @@
-import click
 from typing import Optional
-from journal_ai.storage import JsonStorage
+
+import click
+
 from journal_ai.config import Config
+from journal_ai.storage import JsonStorage
 
 
 class JournalManager:

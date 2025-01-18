@@ -1,6 +1,8 @@
-from openai import OpenAI
-from journal_ai.config import Config
 from typing import Optional
+
+from openai import OpenAI
+
+from journal_ai.config import Config
 
 
 def generate_title(content: str, config: Optional[Config] = None) -> str:

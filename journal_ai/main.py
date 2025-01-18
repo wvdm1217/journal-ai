@@ -8,34 +8,29 @@ class JournalManager:
         self.storage = JsonStorage()
 
     def create_entry(self, content: str) -> str:
-        entries = self.storage.load()
+        entries = self.storage.load_all()
         entry_id = str(len(entries) + 1)
-        entries[entry_id] = content
-        self.storage.save(entries)
+        self.storage.save_entry(entry_id, content)
         return entry_id
 
     def view_entries(self):
-        return self.storage.load()
+        return self.storage.load_all()
 
     def search_entries(self, keyword: str):
-        entries = self.storage.load()
+        entries = self.storage.load_all()
         return {id: content for id, content in entries.items() if keyword.lower() in content.lower()}
 
     def edit_entry(self, entry_id: str, content: str) -> bool:
-        entries = self.storage.load()
-        if entry_id in entries:
-            entries[entry_id] = content
-            self.storage.save(entries)
+        if self.storage.load_entry(entry_id) is not None:
+            self.storage.save_entry(entry_id, content)
             return True
         return False
 
     def delete_entry(self, entry_id: str) -> bool:
-        entries = self.storage.load()
-        if entry_id in entries:
-            del entries[entry_id]
-            self.storage.save(entries)
-            return True
-        return False
+        return self.storage.delete_entry(entry_id)
+
+    def purge(self):
+        self.storage.purge()
 
 
 @click.group()
@@ -93,6 +88,17 @@ def delete(entry_id):
         click.echo(f"Deleted entry {entry_id}")
     else:
         click.echo(f"Entry {entry_id} not found")
+
+
+@cli.command()
+def purge():
+    """Delete all journal entries."""
+    if click.confirm('Are you sure you want to delete all entries? This cannot be undone.'):
+        journal = JournalManager()
+        journal.purge()
+        click.echo("All entries have been deleted.")
+    else:
+        click.echo("Operation cancelled.")
 
 
 def main():

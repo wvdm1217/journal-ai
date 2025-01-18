@@ -8,7 +8,9 @@ from journal_ai.config import Config
 
 
 class JsonStorage:
-    def __init__(self, directory: str = "data/entries", config: Optional[Config] = None):
+    def __init__(
+        self, directory: str = "data/entries", config: Optional[Config] = None
+    ):
         self.directory = Path(directory)
         self.config = config
         self._ensure_data_directory()
@@ -21,24 +23,30 @@ class JsonStorage:
 
     def load_entry(self, entry_id: str) -> Optional[JournalEntry]:
         try:
-            with open(self._get_entry_path(entry_id), 'r') as f:
+            with open(self._get_entry_path(entry_id), "r") as f:
                 data = json.load(f)
-                data['id'] = entry_id
+                data["id"] = entry_id
                 return JournalEntry.from_dict(data)
         except FileNotFoundError:
             return None
 
     def load_all(self) -> Dict[str, JournalEntry]:
         entries = {}
-        for file_path in self.directory.glob('*.json'):
+        for file_path in self.directory.glob("*.json"):
             entry_id = file_path.stem
-            with open(file_path, 'r') as f:
+            with open(file_path, "r") as f:
                 data = json.load(f)
-                data['id'] = entry_id
+                data["id"] = entry_id
                 entries[entry_id] = JournalEntry.from_dict(data)
         return entries
 
-    def save_entry(self, entry_id: str, content: str, existing_entry: Optional[JournalEntry] = None, title: Optional[str] = None):
+    def save_entry(
+        self,
+        entry_id: str,
+        content: str,
+        existing_entry: Optional[JournalEntry] = None,
+        title: Optional[str] = None,
+    ):
         now = datetime.now()
         if existing_entry:
             entry = JournalEntry(
@@ -47,7 +55,7 @@ class JsonStorage:
                 updated_at=now,
                 id=entry_id,
                 title=title or existing_entry.title,
-                tags=existing_entry.tags
+                tags=existing_entry.tags,
             )
         else:
             generated_title = title or generate_title(content, self.config)
@@ -56,10 +64,10 @@ class JsonStorage:
                 created_at=now,
                 updated_at=now,
                 id=entry_id,
-                title=generated_title
+                title=generated_title,
             )
 
-        with open(self._get_entry_path(entry_id), 'w') as f:
+        with open(self._get_entry_path(entry_id), "w") as f:
             json.dump(entry.to_dict(), f, indent=2)
 
     def delete_entry(self, entry_id: str) -> bool:
@@ -70,5 +78,5 @@ class JsonStorage:
             return False
 
     def purge(self):
-        for file_path in self.directory.glob('*.json'):
+        for file_path in self.directory.glob("*.json"):
             file_path.unlink()

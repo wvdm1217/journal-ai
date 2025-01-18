@@ -20,7 +20,11 @@ class JournalManager:
 
     def search_entries(self, keyword: str):
         entries = self.storage.load_all()
-        return {id: content for id, content in entries.items() if keyword.lower() in content.lower()}
+        return {
+            id: content
+            for id, content in entries.items()
+            if keyword.lower() in content.lower()
+        }
 
     def edit_entry(self, entry_id: str, content: str) -> bool:
         existing_entry = self.storage.load_entry(entry_id)
@@ -43,7 +47,7 @@ def cli():
 
 
 @cli.command()
-@click.argument('content')
+@click.argument("content")
 def create(content):
     """Create a new journal entry."""
     try:
@@ -64,10 +68,8 @@ def view():
         click.echo(f"\nEntry {entry_id}:")
         if entry.title:
             click.echo(f"Title: {entry.title}")
-        click.echo(
-            f"Created: {entry.created_at.strftime('%Y-%m-%d %H:%M:%S')}")
-        click.echo(
-            f"Updated: {entry.updated_at.strftime('%Y-%m-%d %H:%M:%S')}")
+        click.echo(f"Created: {entry.created_at.strftime('%Y-%m-%d %H:%M:%S')}")
+        click.echo(f"Updated: {entry.updated_at.strftime('%Y-%m-%d %H:%M:%S')}")
         click.echo(f"Words: {entry.word_count}")
         if entry.tags:
             click.echo(f"Tags: {', '.join(entry.tags)}")
@@ -76,7 +78,7 @@ def view():
 
 
 @cli.command()
-@click.argument('keyword')
+@click.argument("keyword")
 def search(keyword):
     """Search for entries with a keyword."""
     journal = JournalManager()
@@ -86,8 +88,8 @@ def search(keyword):
 
 
 @cli.command()
-@click.argument('entry_id')
-@click.argument('content')
+@click.argument("entry_id")
+@click.argument("content")
 def edit(entry_id, content):
     """Edit an existing entry."""
     journal = JournalManager()
@@ -98,7 +100,7 @@ def edit(entry_id, content):
 
 
 @cli.command()
-@click.argument('entry_id')
+@click.argument("entry_id")
 def delete(entry_id):
     """Delete a journal entry."""
     journal = JournalManager()
@@ -111,7 +113,9 @@ def delete(entry_id):
 @cli.command()
 def purge():
     """Delete all journal entries."""
-    if click.confirm('Are you sure you want to delete all entries? This cannot be undone.'):
+    if click.confirm(
+        "Are you sure you want to delete all entries? This cannot be undone."
+    ):
         journal = JournalManager()
         journal.purge()
         click.echo("All entries have been deleted.")

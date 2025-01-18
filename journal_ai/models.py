@@ -21,7 +21,7 @@ class JournalEntry:
             "id": self.id,
             "title": self.title,
             "tags": self.tags or [],
-            "word_count": self.word_count or len(self.content.split())
+            "word_count": self.word_count or len(self.content.split()),
         }
 
     @classmethod
@@ -33,5 +33,5 @@ class JournalEntry:
             id=data.get("id"),
             title=data.get("title"),
             tags=data.get("tags", []),
-            word_count=data.get("word_count", 0)
+            word_count=data.get("word_count", 0),
         )

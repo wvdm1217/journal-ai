@@ -1,11 +1,13 @@
 import click
 from typing import Optional
 from journal_ai.storage import JsonStorage
+from journal_ai.config import Config
 
 
 class JournalManager:
-    def __init__(self):
-        self.storage = JsonStorage()
+    def __init__(self, config: Optional[Config] = None):
+        self.config = config or Config.from_env()
+        self.storage = JsonStorage(config=self.config)
 
     def create_entry(self, content: str) -> str:
         entries = self.storage.load_all()
@@ -44,9 +46,13 @@ def cli():
 @click.argument('content')
 def create(content):
     """Create a new journal entry."""
-    journal = JournalManager()
-    entry_id = journal.create_entry(content)
-    click.echo(f"Created entry with ID: {entry_id}")
+    try:
+        journal = JournalManager()
+        entry_id = journal.create_entry(content)
+        click.echo(f"Created entry with ID: {entry_id}")
+    except ValueError as e:
+        click.echo(f"Error: {str(e)}", err=True)
+        exit(1)
 
 
 @cli.command()

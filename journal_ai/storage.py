@@ -4,11 +4,13 @@ from pathlib import Path
 from typing import Dict, Optional
 from journal_ai.models import JournalEntry
 from journal_ai.utils import generate_title
+from journal_ai.config import Config
 
 
 class JsonStorage:
-    def __init__(self, directory: str = "data/entries"):
+    def __init__(self, directory: str = "data/entries", config: Optional[Config] = None):
         self.directory = Path(directory)
+        self.config = config
         self._ensure_data_directory()
 
     def _ensure_data_directory(self):
@@ -48,7 +50,7 @@ class JsonStorage:
                 tags=existing_entry.tags
             )
         else:
-            generated_title = title or generate_title(content)
+            generated_title = title or generate_title(content, self.config)
             entry = JournalEntry(
                 content=content,
                 created_at=now,

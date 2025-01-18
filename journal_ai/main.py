@@ -1,30 +1,41 @@
 import click
 from typing import Optional
+from journal_ai.storage import JsonStorage
 
 
 class JournalManager:
     def __init__(self):
-        self.entries = {}  # Temporary in-memory storage, should be replaced with proper storage
+        self.storage = JsonStorage()
 
     def create_entry(self, content: str) -> str:
-        entry_id = str(len(self.entries) + 1)
-        self.entries[entry_id] = content
+        entries = self.storage.load()
+        entry_id = str(len(entries) + 1)
+        entries[entry_id] = content
+        self.storage.save(entries)
         return entry_id
 
     def view_entries(self):
-        return self.entries
+        return self.storage.load()
 
     def search_entries(self, keyword: str):
-        return {id: content for id, content in self.entries.items() if keyword.lower() in content.lower()}
+        entries = self.storage.load()
+        return {id: content for id, content in entries.items() if keyword.lower() in content.lower()}
 
     def edit_entry(self, entry_id: str, content: str) -> bool:
-        if entry_id in self.entries:
-            self.entries[entry_id] = content
+        entries = self.storage.load()
+        if entry_id in entries:
+            entries[entry_id] = content
+            self.storage.save(entries)
             return True
         return False
 
     def delete_entry(self, entry_id: str) -> bool:
-        return bool(self.entries.pop(entry_id, None))
+        entries = self.storage.load()
+        if entry_id in entries:
+            del entries[entry_id]
+            self.storage.save(entries)
+            return True
+        return False
 
 
 @click.group()

@@ -4,12 +4,14 @@ import click
 
 from journal_ai.config import Config
 from journal_ai.storage import JsonStorage
+from journal_ai.rag import RAGQuerier
 
 
 class JournalManager:
     def __init__(self, config: Optional[Config] = None):
         self.config = config or Config.from_env()
         self.storage = JsonStorage(config=self.config)
+        self.rag = RAGQuerier(self.config)
 
     def create_entry(self, content: str) -> str:
         entries = self.storage.load_all()
@@ -41,6 +43,14 @@ class JournalManager:
     def purge(self):
         self.storage.purge()
 
+    def query(self, question: str) -> str:
+        entries = self.storage.load_all()
+        if not entries:
+            return "No journal entries found to query."
+
+        self.rag.index_entries(entries)
+        return self.rag.query(question)
+
 
 @click.group()
 def cli():
@@ -70,8 +80,10 @@ def view():
         click.echo(f"\nEntry {entry_id}:")
         if entry.title:
             click.echo(f"Title: {entry.title}")
-        click.echo(f"Created: {entry.created_at.strftime('%Y-%m-%d %H:%M:%S')}")
-        click.echo(f"Updated: {entry.updated_at.strftime('%Y-%m-%d %H:%M:%S')}")
+        click.echo(
+            f"Created: {entry.created_at.strftime('%Y-%m-%d %H:%M:%S')}")
+        click.echo(
+            f"Updated: {entry.updated_at.strftime('%Y-%m-%d %H:%M:%S')}")
         click.echo(f"Words: {entry.word_count}")
         if entry.tags:
             click.echo(f"Tags: {', '.join(entry.tags)}")
@@ -123,6 +135,16 @@ def purge():
         click.echo("All entries have been deleted.")
     else:
         click.echo("Operation cancelled.")
+
+
+@cli.command()
+@click.argument("question")
+def query(question):
+    """Ask a question about your journal entries."""
+    journal = JournalManager()
+    response = journal.query(question)
+    click.echo("\nAnswer based on your journal entries:")
+    click.echo(response)
 
 
 def main():

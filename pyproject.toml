@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "click>=8.1.8",
+    "openai>=1.59.8",
 ]
 
 [project.scripts]

@@ -2,14 +2,13 @@
 An LLM-enhanced journaling application for your CLI.
 
 ## Overview
-JournalAI is a command-line journaling tool that leverages Retrieval-Augmented Generation (RAG) and AI to provide an enhanced journaling experience. It uses UV for Python tooling to ensure a smooth development and usage process.
+JournalAI is a command-line journaling tool that allows you to manage your journal entries directly from the terminal.
 
 ## Features
-- **AI-Powered Entries**: Generate and enhance journal entries with AI assistance
-- **Smart Search**: Search through past entries using natural language queries
 - **Entry Management**: Create, edit, delete, and view journal entries
-- **Custom Prompts**: Use personalized prompts for consistent journaling
-- **Data Privacy**: Local storage of entries with optional encryption
+- **Search Capability**: Search through entries using keywords
+- **Local Storage**: All entries are stored locally as JSON files
+- **Bulk Operations**: Ability to view all entries or purge entire journal
 
 ## Installation
 To install journal-ai, follow these steps:

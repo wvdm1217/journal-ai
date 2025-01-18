@@ -21,8 +21,9 @@ class JournalManager:
         return {id: content for id, content in entries.items() if keyword.lower() in content.lower()}
 
     def edit_entry(self, entry_id: str, content: str) -> bool:
-        if self.storage.load_entry(entry_id) is not None:
-            self.storage.save_entry(entry_id, content)
+        existing_entry = self.storage.load_entry(entry_id)
+        if existing_entry is not None:
+            self.storage.save_entry(entry_id, content, existing_entry)
             return True
         return False
 
@@ -53,8 +54,17 @@ def view():
     """View all journal entries."""
     journal = JournalManager()
     entries = journal.view_entries()
-    for entry_id, content in entries.items():
-        click.echo(f"Entry {entry_id}: {content}")
+    for entry_id, entry in entries.items():
+        click.echo(f"\nEntry {entry_id}:")
+        click.echo(
+            f"Created: {entry.created_at.strftime('%Y-%m-%d %H:%M:%S')}")
+        click.echo(
+            f"Updated: {entry.updated_at.strftime('%Y-%m-%d %H:%M:%S')}")
+        click.echo(f"Words: {entry.word_count}")
+        if entry.tags:
+            click.echo(f"Tags: {', '.join(entry.tags)}")
+        click.echo(f"Content: {entry.content}")
+        click.echo("-" * 40)
 
 
 @cli.command()

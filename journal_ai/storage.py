@@ -1,7 +1,8 @@
 import json
-import os
+from datetime import datetime
 from pathlib import Path
 from typing import Dict, Optional
+from journal_ai.models import JournalEntry
 
 
 class JsonStorage:
@@ -15,24 +16,47 @@ class JsonStorage:
     def _get_entry_path(self, entry_id: str) -> Path:
         return self.directory / f"{entry_id}.json"
 
-    def load_entry(self, entry_id: str) -> Optional[str]:
+    def load_entry(self, entry_id: str) -> Optional[JournalEntry]:
         try:
             with open(self._get_entry_path(entry_id), 'r') as f:
-                return json.load(f)['content']
+                data = json.load(f)
+                data['id'] = entry_id
+                return JournalEntry.from_dict(data)
         except FileNotFoundError:
             return None
 
-    def load_all(self) -> Dict[str, str]:
+    def load_all(self) -> Dict[str, JournalEntry]:
         entries = {}
         for file_path in self.directory.glob('*.json'):
             entry_id = file_path.stem
             with open(file_path, 'r') as f:
-                entries[entry_id] = json.load(f)['content']
+                data = json.load(f)
+                data['id'] = entry_id
+                entries[entry_id] = JournalEntry.from_dict(data)
         return entries
 
-    def save_entry(self, entry_id: str, content: str):
+    def save_entry(self, entry_id: str, content: str, existing_entry: Optional[JournalEntry] = None, title: Optional[str] = None):
+        now = datetime.now()
+        if existing_entry:
+            entry = JournalEntry(
+                content=content,
+                created_at=existing_entry.created_at,
+                updated_at=now,
+                id=entry_id,
+                title=title or existing_entry.title,
+                tags=existing_entry.tags
+            )
+        else:
+            entry = JournalEntry(
+                content=content,
+                created_at=now,
+                updated_at=now,
+                id=entry_id,
+                title=title
+            )
+
         with open(self._get_entry_path(entry_id), 'w') as f:
-            json.dump({'content': content}, f, indent=2)
+            json.dump(entry.to_dict(), f, indent=2)
 
     def delete_entry(self, entry_id: str) -> bool:
         try:

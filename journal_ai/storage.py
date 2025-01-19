@@ -10,9 +10,10 @@ from journal_ai.utils import generate_title
 
 class JsonStorage:
     def __init__(
-        self, directory: str = "data/entries", config: Optional[Config] = None
+        self, directory: str = "data", config: Optional[Config] = None
     ):
         self.directory = Path(directory)
+        self.entry_directory = self.directory / "entries"
         self.config = config
         self._ensure_data_directory()
 
@@ -20,7 +21,10 @@ class JsonStorage:
         self.directory.mkdir(parents=True, exist_ok=True)
 
     def _get_entry_path(self, entry_id: str) -> Path:
-        return self.directory / f"{entry_id}.json"
+        return self.entry_directory / f"{entry_id}.json"
+
+    def get_vector_db_path(self) -> Path:
+        return self.directory / "vector.index"
 
     def load_entry(self, entry_id: str) -> Optional[JournalEntry]:
         try:
@@ -33,7 +37,7 @@ class JsonStorage:
 
     def load_all(self) -> Dict[str, JournalEntry]:
         entries = {}
-        for file_path in self.directory.glob("*.json"):
+        for file_path in self.entry_directory.glob("*.json"):
             entry_id = file_path.stem
             with open(file_path, "r") as f:
                 data = json.load(f)
@@ -79,5 +83,5 @@ class JsonStorage:
             return False
 
     def purge(self):
-        for file_path in self.directory.glob("*.json"):
+        for file_path in self.entry_directory.glob("*.json"):
             file_path.unlink()

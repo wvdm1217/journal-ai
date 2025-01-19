@@ -59,13 +59,25 @@ def cli():
 
 
 @cli.command()
-@click.argument("content")
-def create(content):
-    """Create a new journal entry."""
+def create():
+    """Create a new journal entry.
+    Enter your content and press Ctrl+D (Unix) or Ctrl+Z (Windows) when done."""
+    click.echo(
+        """Enter your journal entry
+        (Press Ctrl+D on Unix or Ctrl+Z on Windows when done):"""
+    )
     try:
+        content = click.get_text_stream("stdin").read().strip()
+        if not content:
+            click.echo("Empty entry not allowed.", err=True)
+            exit(1)
+
         journal = JournalManager()
         entry_id = journal.create_entry(content)
-        click.echo(f"Created entry with ID: {entry_id}")
+        click.echo(f"\nCreated entry with ID: {entry_id}")
+    except (EOFError, KeyboardInterrupt):
+        click.echo("\nEntry creation cancelled.")
+        exit(1)
     except ValueError as e:
         click.echo(f"Error: {str(e)}", err=True)
         exit(1)

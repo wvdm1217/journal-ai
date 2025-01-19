@@ -39,14 +39,24 @@ class RAGQuerier:
 
     def index_entries(self, entries: Dict[str, JournalEntry]):
         self.entries = list(entries.values())
-        embeddings = [self._get_embedding(entry.content)
-                      for entry in self.entries]
+        embeddings = []
 
-        dimension = len(embeddings[0])
-        self.index = self._load_or_create_index(dimension)
-        self.index.reset()  # Clear existing vectors
-        self.index.add(np.array(embeddings))
-        self._save_index()
+        for entry in self.entries:
+            if not entry.embedding:
+                entry.embedding = self._get_embedding(entry.content).tolist()
+                # Save the entry with new embedding
+                self.storage.save_entry(
+                    entry.id,
+                    entry.content,
+                    existing_entry=entry
+                )
+            embeddings.append(np.array(entry.embedding, dtype=np.float32))
+
+        if embeddings:
+            dimension = len(embeddings[0])
+            self.index = faiss.IndexFlatL2(dimension)
+            self.index.add(np.array(embeddings))
+            self._save_index()
 
     def query(self, question: str, k: int = 3) -> str:
         if self.index is None:

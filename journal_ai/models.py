@@ -12,6 +12,7 @@ class JournalEntry:
     title: Optional[str] = None
     tags: list[str] = None
     word_count: int = 0
+    embedding: Optional[list[float]] = None
 
     def to_dict(self):
         return {
@@ -22,6 +23,7 @@ class JournalEntry:
             "title": self.title,
             "tags": self.tags or [],
             "word_count": self.word_count or len(self.content.split()),
+            "embedding": self.embedding if self.embedding is not None else [],
         }
 
     @classmethod
@@ -34,4 +36,5 @@ class JournalEntry:
             title=data.get("title"),
             tags=data.get("tags", []),
             word_count=data.get("word_count", 0),
+            embedding=data.get("embedding", []),
         )

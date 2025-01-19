@@ -59,6 +59,7 @@ class JsonStorage:
                 id=entry_id,
                 title=title or existing_entry.title,
                 tags=existing_entry.tags,
+                embedding=existing_entry.embedding,
             )
         else:
             generated_title = title or generate_title(content, self.config)

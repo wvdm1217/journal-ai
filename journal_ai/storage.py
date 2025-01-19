@@ -82,5 +82,11 @@ class JsonStorage:
             return False
 
     def purge(self):
+        # Delete all entry files
         for file_path in self.entry_directory.glob("*.json"):
             file_path.unlink()
+
+        # Delete vector index if it exists
+        vector_db_path = self.get_vector_db_path()
+        if vector_db_path.exists():
+            vector_db_path.unlink()

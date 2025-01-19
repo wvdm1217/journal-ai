@@ -9,9 +9,7 @@ from journal_ai.utils import generate_title
 
 
 class JsonStorage:
-    def __init__(
-        self, directory: str = "data", config: Optional[Config] = None
-    ):
+    def __init__(self, directory: str = "data", config: Optional[Config] = None):
         self.directory = Path(directory)
         self.entry_directory = self.directory / "entries"
         self.config = config

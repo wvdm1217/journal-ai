@@ -3,8 +3,8 @@ from typing import Optional
 import click
 
 from journal_ai.config import Config
-from journal_ai.storage import JsonStorage
 from journal_ai.rag import RAGQuerier
+from journal_ai.storage import JsonStorage
 
 
 class JournalManager:
@@ -80,10 +80,8 @@ def view():
         click.echo(f"\nEntry {entry_id}:")
         if entry.title:
             click.echo(f"Title: {entry.title}")
-        click.echo(
-            f"Created: {entry.created_at.strftime('%Y-%m-%d %H:%M:%S')}")
-        click.echo(
-            f"Updated: {entry.updated_at.strftime('%Y-%m-%d %H:%M:%S')}")
+        click.echo(f"Created: {entry.created_at.strftime('%Y-%m-%d %H:%M:%S')}")
+        click.echo(f"Updated: {entry.updated_at.strftime('%Y-%m-%d %H:%M:%S')}")
         click.echo(f"Words: {entry.word_count}")
         if entry.tags:
             click.echo(f"Tags: {', '.join(entry.tags)}")

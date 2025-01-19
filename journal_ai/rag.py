@@ -1,10 +1,11 @@
-import numpy as np
+from typing import Dict, List
+
 import faiss
-from typing import List, Dict, Optional
-from pathlib import Path
+import numpy as np
 from openai import OpenAI
-from journal_ai.models import JournalEntry
+
 from journal_ai.config import Config
+from journal_ai.models import JournalEntry
 from journal_ai.storage import JsonStorage
 
 
@@ -32,8 +33,7 @@ class RAGQuerier:
 
     def _get_embedding(self, text: str) -> np.ndarray:
         response = self.client.embeddings.create(
-            input=text,
-            model=self.config.embedding_model
+            input=text, model=self.config.embedding_model
         )
         return np.array(response.data[0].embedding, dtype=np.float32)
 
@@ -59,11 +59,14 @@ class RAGQuerier:
         question_embedding = self._get_embedding(question)
         D, I = self.index.search(question_embedding.reshape(1, -1), k)
 
-        context = "\n\n".join([
-            f"Entry {self.entries[i].id} ({self.entries[i].title}):\n{
-                self.entries[i].content}"
-            for i in I[0]
-        ])
+        context = "\n\n".join(
+            [
+                f"Entry {self.entries[i].id} ({self.entries[i].title}):\n{
+                    self.entries[i].content
+                }"
+                for i in I[0]
+            ]
+        )
 
         prompt = f"""Based on the following journal entries, answer this question: {question}
 

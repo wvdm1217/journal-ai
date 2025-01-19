@@ -22,7 +22,7 @@ class RAGQuerier:
         if index_path.exists():
             try:
                 return faiss.read_index(str(index_path))
-            except:
+            except (IOError, RuntimeError):
                 return faiss.IndexFlatL2(dimension)
         return faiss.IndexFlatL2(dimension)
 
@@ -57,23 +57,24 @@ class RAGQuerier:
             self.entries = list(self.storage.load_all().values())
 
         question_embedding = self._get_embedding(question)
-        D, I = self.index.search(question_embedding.reshape(1, -1), k)
+        distances, indices = self.index.search(
+            question_embedding.reshape(1, -1), k)
 
         context = "\n\n".join(
             [
                 f"Entry {self.entries[i].id} ({self.entries[i].title}):\n{
-                    self.entries[i].content
-                }"
-                for i in I[0]
+                    self.entries[i].content}"
+                for i in indices[0]
             ]
         )
 
-        prompt = f"""Based on the following journal entries, answer this question: {question}
-
-Context entries:
-{context}
-
-Please provide a thoughtful answer based only on the information in these journal entries."""
+        prompt = (
+            f"Based on the following journal entries, answer this question: {
+                question}\n\n"
+            f"Context entries:\n{context}\n\n"
+            "Please provide a thoughtful answer based only on the information in these "
+            "journal entries."
+        )
 
         response = self.client.chat.completions.create(
             model=self.config.model,

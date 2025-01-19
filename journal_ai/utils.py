@@ -11,9 +11,10 @@ def generate_title(content: str, config: Optional[Config] = None) -> str:
 
     client = OpenAI(api_key=config.openai_api_key)
 
-    prompt = f"Generate a short, engaging title (max 5 words) for this journal entry:\n\n{
-        content
-    }"
+    prompt = (
+        "Generate a short, engaging title (max 5 words) for this journal entry:\n\n"
+        f"{content}"
+    )
 
     try:
         response = client.chat.completions.create(

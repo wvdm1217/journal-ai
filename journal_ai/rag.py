@@ -28,8 +28,7 @@ class RAGQuerier:
 
     def _save_index(self):
         if self.index is not None:
-            faiss.write_index(self.index, str(
-                self.storage.get_vector_db_path()))
+            faiss.write_index(self.index, str(self.storage.get_vector_db_path()))
 
     def _get_embedding(self, text: str) -> np.ndarray:
         response = self.client.embeddings.create(
@@ -45,11 +44,7 @@ class RAGQuerier:
             if not entry.embedding:
                 entry.embedding = self._get_embedding(entry.content).tolist()
                 # Save the entry with new embedding
-                self.storage.save_entry(
-                    entry.id,
-                    entry.content,
-                    existing_entry=entry
-                )
+                self.storage.save_entry(entry.id, entry.content, existing_entry=entry)
             embeddings.append(np.array(entry.embedding, dtype=np.float32))
 
         if embeddings:
@@ -67,20 +62,21 @@ class RAGQuerier:
             self.entries = list(self.storage.load_all().values())
 
         question_embedding = self._get_embedding(question)
-        distances, indices = self.index.search(
-            question_embedding.reshape(1, -1), k)
+        distances, indices = self.index.search(question_embedding.reshape(1, -1), k)
 
         context = "\n\n".join(
             [
                 f"Entry {self.entries[i].id} ({self.entries[i].title}):\n{
-                    self.entries[i].content}"
+                    self.entries[i].content
+                }"
                 for i in indices[0]
             ]
         )
 
         prompt = (
             f"Based on the following journal entries, answer this question: {
-                question}\n\n"
+                question
+            }\n\n"
             f"Context entries:\n{context}\n\n"
             "Please provide a thoughtful answer based only on the information in these "
             "journal entries."

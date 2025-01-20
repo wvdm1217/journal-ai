@@ -12,7 +12,17 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": ".devcontainer/post-create-command.sh"
+	"postCreateCommand": ".devcontainer/post-create-command.sh",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"charliermarsh.ruff",
+				"GitHub.copilot",
+				"GitHub.copilot-chat"
+			]
+		}
+	}
 
 	// Configure tool-specific properties.
 	// "customizations": {},

@@ -13,3 +13,11 @@ repos:
   rev: 0.5.8
   hooks:
     - id: uv-lock
+- repo: local
+  hooks:
+    - id: pytest
+      name: pytest
+      entry: uv run pytest journal_ai/tests/
+      language: system
+      pass_filenames: false
+      always_run: true

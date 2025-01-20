@@ -10,6 +10,13 @@ dependencies = [
     "openai>=1.59.8",
 ]
 
+[project.optional-dependencies]
+dev = [
+    "pre-commit>=4.0.1",
+    "pytest>=8.3.4",
+    "ruff>=0.9.2",
+]
+
 [project.scripts]
 journal-ai = "journal_ai.main:main"
 
@@ -19,12 +26,6 @@ packages = ["journal_ai"]
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
-
-[dependency-groups]
-dev = [
-    "pre-commit>=4.0.1",
-    "ruff>=0.9.2",
-]
 
 [tool.ruff]
 # Enable Black compatibility

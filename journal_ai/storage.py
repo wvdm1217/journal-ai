@@ -17,6 +17,7 @@ class JsonStorage:
 
     def _ensure_data_directory(self):
         self.directory.mkdir(parents=True, exist_ok=True)
+        self.entry_directory.mkdir(parents=True, exist_ok=True)
 
     def _get_entry_path(self, entry_id: str) -> Path:
         return self.entry_directory / f"{entry_id}.json"

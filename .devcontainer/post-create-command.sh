@@ -8,5 +8,11 @@ uv venv
 source .venv/bin/activate
 uv pip install -e ".[dev]"
 
+# Install ruff
+uv tool install ruff
+
+# Install pre-commit
+uv tool install pre-commit
+
 # Install pre-commit hooks
 pre-commit install

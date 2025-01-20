@@ -9,4 +9,7 @@
         "editor.formatOnType": true,
         "editor.formatOnSave": true
     },
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+    "python.terminal.activateEnvironment": true,
+    "python.terminal.activateEnvInCurrentTerminal": true,
 }

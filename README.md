@@ -84,22 +84,46 @@ OPENAI_EMBEDDING_MODEL=text-embedding-3-large
 ## Usage
 
 ### Basic Commands
-```sh
-# Create a new journal entry
-journal-ai create "Your journal entry text here"
 
-# View all journal entries
+```sh
+# Create a new journal entry interactively
+journal-ai create
+
+# View all journal entries with titles, timestamps, and content
 journal-ai view
 
-# Search for entries with a keyword
+# Search entries using keywords
 journal-ai search "keyword"
 
 # Edit an existing entry
-journal-ai edit <entry_id> "Updated journal entry text here"
+journal-ai edit <entry_id> "Updated content"
 
-# Delete a journal entry
+# Delete a specific entry
 journal-ai delete <entry_id>
+
+# Delete all entries (with confirmation)
+journal-ai purge
+
+# Ask questions about your journal entries using AI
+journal-ai query "What activities did I do last week?"
 ```
+
+Each command can be run with `--help` for more information:
+```sh
+journal-ai <command> --help
+```
+
+### Interactive Entry Creation
+The `create` command starts an interactive session:
+1. Press Enter to start typing
+2. Write your journal entry
+3. Press Ctrl+D (Unix) or Ctrl+Z (Windows) when done
+4. The entry will be saved with an auto-generated title
+
+### AI Features
+- **Auto-generated titles**: Each entry gets an AI-generated title
+- **Semantic search**: Use the `query` command to ask questions about your entries
+- **RAG-powered responses**: Get contextual answers based on your journal content
 
 ## Contributing
 We welcome contributions! Please read our contributing guidelines for more details.

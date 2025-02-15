@@ -16,3 +16,7 @@ uv tool install pre-commit
 
 # Install pre-commit hooks
 pre-commit install
+
+# GitHub CLI
+gh auth login
+gh extension install github/gh-copilot

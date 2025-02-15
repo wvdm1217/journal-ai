@@ -22,6 +22,9 @@
 				"GitHub.copilot-chat"
 			]
 		}
+	},
+	"features": {
+		"ghcr.io/devcontainers/features/github-cli:1": {}
 	}
 
 	// Configure tool-specific properties.

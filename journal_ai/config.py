@@ -5,8 +5,8 @@ from dataclasses import dataclass
 @dataclass
 class Config:
     openai_api_key: str
-    model: str = "gpt-4-turbo-preview"
-    embedding_model: str = "text-embedding-3-small"
+    model: str = "gpt-4o"
+    embedding_model: str = "text-embedding-3-large"
 
     @classmethod
     def from_env(cls) -> "Config":

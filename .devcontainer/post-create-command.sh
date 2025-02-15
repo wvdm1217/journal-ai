@@ -17,6 +17,8 @@ uv tool install pre-commit
 # Install pre-commit hooks
 pre-commit install
 
-# GitHub CLI
-gh auth login
-gh extension install github/gh-copilot
+# Download zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+# Copy .zshrc
+cp .devcontainer/.zshrc ~/.zshrc

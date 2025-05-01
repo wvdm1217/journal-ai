@@ -6,7 +6,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 # Install UV Dependencies
 uv venv
 source .venv/bin/activate
-uv pip install -e ".[dev]"
+uv sync --locked --all-extras --dev
 
 # Install ruff
 uv tool install ruff

@@ -23,11 +23,19 @@ jobs:
         run: uv sync --locked --all-extras --dev
 
       - name: Run tests
-        run: uv run pytest --junitxml=pytest-results.xml
+        run: uv run pytest --doctest-modules --junitxml=pytest-results.xml
+
+      - name: Report test results
+        uses: dorny/test-reporter@v1
+        if: success() || failure()    # run this step even if tests fail
+        with:
+          name: Pytest Results          
+          path: pytest-results.xml
+          reporter: pytest 
 
       - name: Upload pytest test results
         uses: actions/upload-artifact@v4
         with:
           name: pytest-results
           path: pytest-results.xml
-        if: ${{ always() }}
+        if: success() || failure()

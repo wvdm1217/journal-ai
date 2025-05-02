@@ -17,6 +17,10 @@ repos:
   rev: 0.5.8
   hooks:
     - id: uv-lock
+- repo: https://github.com/gitleaks/gitleaks
+  rev: v8.24.2
+  hooks:
+    - id: gitleaks
 - repo: local
   hooks:
     - id: pytest

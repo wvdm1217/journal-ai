@@ -1,0 +1,50 @@
+from typing import Optional
+
+from journal_ai.config import Config
+from journal_ai.rag import RAGQuerier
+from journal_ai.storage import JsonStorage
+
+
+class JournalManager:
+    def __init__(self, config: Optional[Config] = None):
+        self.config = config or Config.from_env()
+        self.storage = JsonStorage(config=self.config)
+        self.rag = RAGQuerier(self.config)
+
+    def create_entry(self, content: str) -> str:
+        entries = self.storage.load_all()
+        entry_id = str(len(entries) + 1)
+        self.storage.save_entry(entry_id, content)
+        return entry_id
+
+    def view_entries(self):
+        return self.storage.load_all()
+
+    def search_entries(self, keyword: str):
+        entries = self.storage.load_all()
+        return {
+            id: content
+            for id, content in entries.items()
+            if keyword.lower() in content.lower()
+        }
+
+    def edit_entry(self, entry_id: str, content: str) -> bool:
+        existing_entry = self.storage.load_entry(entry_id)
+        if existing_entry is not None:
+            self.storage.save_entry(entry_id, content, existing_entry)
+            return True
+        return False
+
+    def delete_entry(self, entry_id: str) -> bool:
+        return self.storage.delete_entry(entry_id)
+
+    def purge(self):
+        self.storage.purge()
+
+    def query(self, question: str) -> str:
+        entries = self.storage.load_all()
+        if not entries:
+            return "No journal entries found to query."
+
+        self.rag.index_entries(entries)
+        return self.rag.query(question)

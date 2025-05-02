@@ -15,8 +15,12 @@ dev = [
     "pre-commit>=4.0.1",
     "ruff>=0.9.2",
 ]
+
+[dependency-groups]
 test = [
+    "pytest-cov>=6.1.1",
     "pytest>=8.3.4",
+
 ]
 
 [project.scripts]
@@ -28,6 +32,8 @@ packages = ["journal_ai"]
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+
 
 [tool.ruff]
 # Enable Black compatibility
@@ -54,3 +60,8 @@ quote-style = "double"
 indent-style = "space"
 skip-magic-trailing-comma = false
 line-ending = "auto"
+
+[tool.pytest.ini_options]
+testpaths = [
+    "journal_ai/tests",
+]

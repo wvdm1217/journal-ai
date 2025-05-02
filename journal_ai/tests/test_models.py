@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from journal_ai.models import JournalEntry
+from journal_ai.journal.models import JournalEntry
 
 
 def test_journal_entry_creation():

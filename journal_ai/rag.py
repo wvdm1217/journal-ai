@@ -5,7 +5,7 @@ import numpy as np
 from openai import OpenAI
 
 from journal_ai.config import Config
-from journal_ai.models import JournalEntry
+from journal_ai.journal.models import JournalEntry
 from journal_ai.storage import JsonStorage
 
 

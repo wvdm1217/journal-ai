@@ -1,6 +1,6 @@
 import click
 
-from journal_ai.journal import JournalManager
+from journal_ai.journal.journal import JournalManager
 
 
 @click.group()

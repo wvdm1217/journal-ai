@@ -19,7 +19,8 @@
 				"ms-python.python",
 				"charliermarsh.ruff",
 				"GitHub.copilot",
-				"GitHub.copilot-chat"
+				"GitHub.copilot-chat",
+				"github.vscode-github-actions"
 			]
 		}
 	},

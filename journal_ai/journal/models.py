@@ -14,7 +14,7 @@ class JournalEntry:
     title: Optional[str] = None
     tags: List[str] = field(default_factory=list)
     word_count: int = 0
-    embedding: Optional[np.ndarray] = field(default_factory=lambda: np.array([]))
+    embedding: Optional[np.ndarray] = None
 
     def to_dict(self):
         return {

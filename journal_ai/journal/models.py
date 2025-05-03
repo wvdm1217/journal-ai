@@ -1,11 +1,11 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Optional
 
 import numpy as np
 
 from journal_ai.config import Config
-from journal_ai.utils import generate_title
+from journal_ai.utils import generate_tags, generate_title
 
 
 @dataclass
@@ -17,7 +17,7 @@ class JournalEntry:
     updated_at: datetime
     id: Optional[str] = None
     title: Optional[str] = None
-    tags: List[str] = field(default_factory=list)
+    tags: Optional[List[str]] = None
     word_count: int = 0
     embedding: Optional[np.ndarray] = None
 
@@ -34,6 +34,7 @@ class JournalEntry:
         config: Optional[Config] = None,
         created_at=None,
         updated_at=None,
+        tags: Optional[List[str]] = None,
         **kwargs,
     ):
         """Factory method to create a new journal entry"""
@@ -45,12 +46,18 @@ class JournalEntry:
         if not generated_title and config:
             generated_title = generate_title(content, config)
 
+        if not tags and config:
+            tags = generate_tags(content, config)
+        else:
+            tags = tags or []
+
         return cls(
             content=content,
             created_at=created_time,
             updated_at=updated_time,
             id=entry_id,
             title=generated_title,
+            tags=tags,
             **kwargs,
         )
 

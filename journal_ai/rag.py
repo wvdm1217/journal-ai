@@ -1,6 +1,6 @@
 from typing import Dict, List, Optional
 
-import faiss
+import faiss  # type: ignore
 import numpy as np
 from openai import OpenAI
 
@@ -56,7 +56,7 @@ class RAGQuerier:
             self.index = faiss.IndexFlatL2(dimension)
             if self.index is not None:
                 embedding_array = np.array(embeddings, dtype=np.float32)
-                self.index.add(embedding_array, len(embeddings))
+                self.index.add(embedding_array)  # type: ignore
                 self._save_index()
 
     def query(self, question: str, k: int = 3) -> str:

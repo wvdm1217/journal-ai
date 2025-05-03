@@ -32,7 +32,11 @@ def generate_title(content: str, config: Optional[Config] = None) -> str:
                 max_tokens=20,
                 temperature=0.7,
             )
-            return response.choices[0].message.content.strip('" \n')
+            output = response.choices[0].message.content
+            if output:
+                return output.strip('" \n')
+            else:
+                return "Untitled Entry"
         except Exception as e:
             print(f"Error generating title: {str(e)}")
             return "Untitled Entry"

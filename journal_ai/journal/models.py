@@ -1,6 +1,8 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
+
+import numpy as np
 
 
 @dataclass
@@ -10,9 +12,9 @@ class JournalEntry:
     updated_at: datetime
     id: Optional[str] = None
     title: Optional[str] = None
-    tags: list[str] = None
+    tags: List[str] = field(default_factory=list)
     word_count: int = 0
-    embedding: Optional[list[float]] = None
+    embedding: Optional[np.ndarray] = field(default_factory=lambda: np.array([]))
 
     def to_dict(self):
         return {
@@ -23,7 +25,7 @@ class JournalEntry:
             "title": self.title,
             "tags": self.tags or [],
             "word_count": self.word_count or len(self.content.split()),
-            "embedding": self.embedding if self.embedding is not None else [],
+            "embedding": self.embedding.tolist() if self.embedding is not None else [],
         }
 
     @classmethod

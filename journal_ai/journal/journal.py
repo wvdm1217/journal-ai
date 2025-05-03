@@ -1,11 +1,15 @@
-from typing import Optional
+from typing import Dict, Optional
 
 from journal_ai.config import Config
+from journal_ai.journal.models import JournalEntry
 from journal_ai.rag import RAGQuerier
 from journal_ai.storage import JsonStorage
 
 
 class JournalManager:
+    """Manages journal entries, including creation, viewing, searching, editing,
+    and deletion."""
+
     def __init__(self, config: Optional[Config] = None):
         self.config = config or Config.from_env()
         self.storage = JsonStorage(config=self.config)
@@ -17,15 +21,15 @@ class JournalManager:
         self.storage.save_entry(entry_id, content)
         return entry_id
 
-    def view_entries(self):
+    def view_entries(self) -> Dict[str, JournalEntry]:
         return self.storage.load_all()
 
-    def search_entries(self, keyword: str):
+    def search_entries(self, keyword: str) -> Dict[str, JournalEntry]:
         entries = self.storage.load_all()
         return {
-            id: content
-            for id, content in entries.items()
-            if keyword.lower() in content.lower()
+            entry_id: entry
+            for entry_id, entry in entries.items()
+            if keyword.lower() in entry.content.lower()
         }
 
     def edit_entry(self, entry_id: str, content: str) -> bool:

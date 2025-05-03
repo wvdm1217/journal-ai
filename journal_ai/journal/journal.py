@@ -18,7 +18,8 @@ class JournalManager:
     def create_entry(self, content: str) -> str:
         entries = self.storage.load_all()
         entry_id = str(len(entries) + 1)
-        self.storage.save_entry(entry_id, content)
+        entry = JournalEntry.create(content=content, entry_id=entry_id)
+        self.storage.save_entry(entry)
         return entry_id
 
     def view_entries(self) -> Dict[str, JournalEntry]:
@@ -35,7 +36,7 @@ class JournalManager:
     def edit_entry(self, entry_id: str, content: str) -> bool:
         existing_entry = self.storage.load_entry(entry_id)
         if existing_entry is not None:
-            self.storage.save_entry(entry_id, content, existing_entry)
+            self.storage.save_entry(existing_entry)
             return True
         return False
 

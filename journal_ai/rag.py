@@ -43,13 +43,7 @@ class RAGQuerier:
         for entry in self.entries:
             if not entry.embedding:
                 entry.embedding = self._get_embedding(entry.content)
-                if entry.id is not None:
-                    self.storage.save_entry(
-                        entry.id, entry.content, existing_entry=entry
-                    )
-
-            if entry.embedding:
-                embeddings.append(np.array(entry.embedding, dtype=np.float32))
+            embeddings.append(np.array(entry.embedding, dtype=np.float32))
 
         if embeddings:
             dimension = len(embeddings[0])

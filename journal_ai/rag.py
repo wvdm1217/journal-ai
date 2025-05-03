@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import faiss
 import numpy as np
@@ -14,7 +14,7 @@ class RAGQuerier:
         self.config = config
         self.client = OpenAI(api_key=config.openai_api_key)
         self.storage = JsonStorage(config=config)
-        self.index = None
+        self.index: Optional[faiss.IndexFlatL2] = None
         self.entries: List[JournalEntry] = []
 
     def _load_or_create_index(self, dimension: int) -> faiss.IndexFlatL2:
@@ -26,7 +26,7 @@ class RAGQuerier:
                 return faiss.IndexFlatL2(dimension)
         return faiss.IndexFlatL2(dimension)
 
-    def _save_index(self):
+    def _save_index(self) -> None:
         if self.index is not None:
             faiss.write_index(self.index, str(self.storage.get_vector_db_path()))
 
@@ -36,22 +36,28 @@ class RAGQuerier:
         )
         return np.array(response.data[0].embedding, dtype=np.float32)
 
-    def index_entries(self, entries: Dict[str, JournalEntry]):
+    def index_entries(self, entries: Dict[str, JournalEntry]) -> None:
         self.entries = list(entries.values())
         embeddings = []
 
         for entry in self.entries:
             if not entry.embedding:
-                entry.embedding = self._get_embedding(entry.content).tolist()
-                # Save the entry with new embedding
-                self.storage.save_entry(entry.id, entry.content, existing_entry=entry)
-            embeddings.append(np.array(entry.embedding, dtype=np.float32))
+                entry.embedding = self._get_embedding(entry.content)
+                if entry.id is not None:
+                    self.storage.save_entry(
+                        entry.id, entry.content, existing_entry=entry
+                    )
+
+            if entry.embedding:
+                embeddings.append(np.array(entry.embedding, dtype=np.float32))
 
         if embeddings:
             dimension = len(embeddings[0])
             self.index = faiss.IndexFlatL2(dimension)
-            self.index.add(np.array(embeddings))
-            self._save_index()
+            if self.index is not None:
+                embedding_array = np.array(embeddings, dtype=np.float32)
+                self.index.add(embedding_array, len(embeddings))
+                self._save_index()
 
     def query(self, question: str, k: int = 3) -> str:
         if self.index is None:
@@ -62,7 +68,12 @@ class RAGQuerier:
             self.entries = list(self.storage.load_all().values())
 
         question_embedding = self._get_embedding(question)
-        distances, indices = self.index.search(question_embedding.reshape(1, -1), k)
+
+        if self.index is None:
+            return "No indexed entries found. Please add some entries first."
+
+        query_vector = np.array([question_embedding], dtype=np.float32)
+        distances, indices = self.index.search(query_vector, k)  # type: ignore
 
         context = "\n\n".join(
             [
@@ -88,4 +99,5 @@ class RAGQuerier:
             temperature=0.7,
         )
 
-        return response.choices[0].message.content
+        content = response.choices[0].message.content
+        return content if content is not None else "No response generated."

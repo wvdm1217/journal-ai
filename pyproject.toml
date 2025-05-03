@@ -65,3 +65,7 @@ line-ending = "auto"
 testpaths = [
     "journal_ai/tests",
 ]
+
+[[tool.mypy.overrides]]
+module = ["faiss.*"]
+follow_untyped_imports = true

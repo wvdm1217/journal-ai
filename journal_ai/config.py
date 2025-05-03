@@ -14,8 +14,13 @@ class Config:
         if not api_key:
             raise ValueError("OPENAI_API_KEY environment variable is not set")
 
+        model = os.getenv("OPENAI_CHAT_MODEL") or "gpt-4o"
+        embedding_model = (
+            os.getenv("OPENAI_EMBEDDING_MODEL") or "text-embedding-3-large"
+        )
+
         return cls(
             openai_api_key=api_key,
-            model=os.getenv("OPENAI_CHAT_MODEL"),
-            embedding_model=os.getenv("OPENAI_EMBEDDING_MODEL"),
+            model=model,
+            embedding_model=embedding_model,
         )

@@ -28,7 +28,7 @@ repos:
   hooks:
     - id: pytest
       name: pytest
-      entry: uv run pytest --doctest-modules
+      entry: uv run pytest
       language: system
       pass_filenames: false
       always_run: true

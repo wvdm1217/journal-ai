@@ -63,7 +63,7 @@ line-ending = "auto"
 
 [tool.pytest.ini_options]
 testpaths = [
-    "journal_ai/tests",
+    "journal_ai/"
 ]
 
 [[tool.mypy.overrides]]

@@ -2,9 +2,10 @@
 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Journal AI CI](https://github.com/wvdm1217/journal-ai/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/wvdm1217/journal-ai/actions/workflows/main.yml)
+[![Github Actions](https://github.com/wvdm1217/journal-ai/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/wvdm1217/journal-ai/actions/workflows/main.yml)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
+[![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
 
 
 An LLM-enhanced journaling application for your CLI.

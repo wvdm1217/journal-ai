@@ -57,7 +57,7 @@ def generate_tags(content: str, config: Optional[Config] = None) -> List[str]:
     Args:
         content (str): The content of the journal entry.
     Returns:
-        str: The generated tags.
+        List[str]: The generated tags.
     """
 
     if config is None:

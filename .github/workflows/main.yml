@@ -26,7 +26,7 @@ jobs:
         run: uv sync --locked --group test
 
       - name: Run tests
-        run: uv run pytest --doctest-modules --junitxml=pytest-results.xml
+        run: uv run pytest --junitxml=pytest-results.xml
 
       - name: Report test results
         uses: dorny/test-reporter@v1

@@ -8,11 +8,9 @@ repos:
     - id: ruff
       args: [ --fix ]
       stages: [pre-commit]
-      autostage: true
     # Run the formatter.
     - id: ruff-format
       stages: [pre-commit]
-      autostage: true
 - repo: https://github.com/astral-sh/uv-pre-commit
   # uv version.
   rev: 0.7.2
@@ -30,7 +28,7 @@ repos:
   hooks:
     - id: pytest
       name: pytest
-      entry: uv run pytest journal_ai/tests/
+      entry: uv run pytest --doctest-modules
       language: system
       pass_filenames: false
       always_run: true

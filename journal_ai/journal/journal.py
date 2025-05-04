@@ -36,6 +36,7 @@ class JournalManager:
     def edit_entry(self, entry_id: str, content: str) -> bool:
         existing_entry = self.storage.load_entry(entry_id)
         if existing_entry is not None:
+            existing_entry.content = content
             self.storage.save_entry(existing_entry)
             return True
         return False

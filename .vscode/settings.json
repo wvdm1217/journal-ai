@@ -1,7 +1,4 @@
 {
-    "python.testing.pytestArgs": [
-        "journal_ai/tests"
-    ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
     "[python]": {

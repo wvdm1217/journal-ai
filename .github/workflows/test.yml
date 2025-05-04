@@ -1,4 +1,4 @@
-name: Journal AI CI
+name: test
 
 on:
   push:

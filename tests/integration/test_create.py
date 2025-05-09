@@ -1,4 +1,5 @@
 import json
+import os
 import tempfile
 
 import pytest
@@ -30,7 +31,9 @@ def test_create_journal_entry(cli_runner: CliRunner):
             obj={"journal": journal},
         )
 
-        with open(temp_dir + "/entries/1.json", "r") as f:
+        temp_file_path = os.path.join(temp_dir, "entries", "1.json")
+
+        with open(temp_file_path, "r") as f:
             file_contents = f.read()
             data = json.loads(file_contents)
             assert data["content"] == content

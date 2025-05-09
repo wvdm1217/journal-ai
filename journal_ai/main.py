@@ -14,10 +14,7 @@ def cli(ctx: click.Context):
     if "journal" not in ctx.obj:
         config: Config = get_config()
         storage = JsonStorage(config=config)
-        if config is not None:
-            rag = RAGQuerier(config=config)
-        else:
-            rag = None
+        rag = RAGQuerier(config=config)
         ctx.obj["journal"] = JournalManager(storage=storage, rag=rag)
 
 

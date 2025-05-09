@@ -48,7 +48,6 @@ select = [
     "I",   # isort
     "B",   # flake8-bugbear
     "W",   # pycodestyle warnings
-    "S",   # flake8-bandit
 ]
 
 # Isort settings
@@ -74,6 +73,6 @@ module = ["faiss.*"]
 follow_untyped_imports = true
 
 [tool.bandit]
-exclude_dirs = [".venv", "tests"]
+exclude_dirs = [".venv", "tests/"]
 skips = ["B101"]  # Skip assert warnings
 targets = ["journal_ai"]

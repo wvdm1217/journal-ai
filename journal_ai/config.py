@@ -24,3 +24,12 @@ class Config:
             model=model,
             embedding_model=embedding_model,
         )
+
+
+def get_config() -> Config:
+    """Get the configuration for the application.
+
+    Returns:
+        Config: The configuration object.
+    """
+    return Config.from_env()

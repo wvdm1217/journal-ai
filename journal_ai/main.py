@@ -1,6 +1,9 @@
 import click
 
+from journal_ai.config import Config, get_config
 from journal_ai.journal.journal import JournalManager
+from journal_ai.rag import RAGQuerier
+from journal_ai.storage import JsonStorage
 
 
 @click.group()
@@ -8,7 +11,11 @@ from journal_ai.journal.journal import JournalManager
 def cli(ctx: click.Context):
     """JournalAI - An LLM-enhanced journaling application for your CLI."""
     ctx.ensure_object(dict)
-    ctx.obj["journal"] = JournalManager()
+    if "journal" not in ctx.obj:
+        config: Config = get_config()
+        storage = JsonStorage(config=config)
+        rag = RAGQuerier(config=config)
+        ctx.obj["journal"] = JournalManager(storage=storage, rag=rag)
 
 
 @cli.command()

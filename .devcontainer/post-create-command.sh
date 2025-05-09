@@ -1,5 +1,9 @@
 #!/bin/bash
 
+sudo apt-get update
+sudo apt-get install -y \
+    entr
+
 # Install UV
 curl -LsSf https://astral.sh/uv/install.sh | sh
 

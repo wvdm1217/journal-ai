@@ -28,7 +28,8 @@ repos:
   rev: 1.8.3
   hooks:
     - id: bandit
-      args: [bandit -c pyproject.toml -r .]
+      args: ["-c", "pyproject.toml", "-r", "."]
+
 - repo: local
   hooks:
     - id: pytest

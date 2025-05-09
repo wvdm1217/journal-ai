@@ -9,7 +9,7 @@ jobs:
     name: gitleaks
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: gitleaks/gitleaks-action@v2
@@ -22,7 +22,23 @@ jobs:
     permissions:
       security-events: write
     steps:
-      - name: Perform Bandit Analysis
-        uses: PyCQA/bandit-action@v1
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          configfile: pyproject.toml
+          python-version: '3.12'
+          
+      - name: Install Bandit with TOML support
+        run: |
+          python -m pip install --upgrade pip
+          pip install "bandit[toml]"
+          
+      - name: Perform Bandit Analysis
+        run: |
+          bandit -r . -f sarif -o results.sarif -c pyproject.toml
+          
+      - name: Upload SARIF results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: results.sarif
